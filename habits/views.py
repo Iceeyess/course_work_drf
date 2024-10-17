@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from rest_framework import viewsets
+from rest_framework import viewsets, generics
 from rest_framework.decorators import permission_classes, api_view
 
 from habits.models import Habit
@@ -21,8 +21,12 @@ class HabitViewSet(viewsets.ModelViewSet):
         request.data['user'] = request.user.id
         return super().create(request, *args, **kwargs)
 
-    def get(self, request):
-        queryset = Habit.objects.all()
+    def list(self, request, *args, **kwargs):
+        queryset = Habit.objects.filter(user=request.user)
         paginated_queryset = self.paginate_queryset(queryset)
-        serializer = HabitSerializer(FiveHabitsOnPage, many=True)
+        serializer = HabitSerializer(paginated_queryset, many=True)
         return self.get_paginated_response(serializer.data)
+
+class GetAllHabits(generics.ListAPIView):
+    queryset = Habit.objects.all()
+    serializer_class = HabitSerializer
