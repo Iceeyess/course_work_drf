@@ -37,6 +37,8 @@ class Habit(models.Model):
                                       help_text='потраченное время на выполнение привычки',
                                       **NULLABLE)
     is_public = models.BooleanField(verbose_name='признак публичности')
+    datetime_to_trigger_task = models.DateTimeField(
+        verbose_name='дата и время', help_text='период следующего запуска напоминания в Телеграмм', **NULLABLE)
 
     def __repr__(self):
         return f"Модель привычек №{self.id}"
