@@ -14,7 +14,7 @@ from datetime import timedelta
 from pathlib import Path
 from dotenv import load_dotenv
 
-from django.conf.global_settings import AUTH_USER_MODEL
+# from django.conf.global_settings import AUTH_USER_MODEL
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'corsheaders',  # Чтобы внешний источник мог получить доступ к backend
     'django_celery_beat',  # обработчик задач
+    'drf_yasg',  # Документация по проекту
 ]
 
 MIDDLEWARE = [
@@ -96,7 +97,6 @@ DATABASES = {
         'PORT': os.getenv('DATABASE_PORT'),
     }
 }
-
 
 
 # Password validation
@@ -209,7 +209,7 @@ if CACHES_ENABLED:
 # Настройки для Celery
 
 # URL-адрес брокера сообщений
-CELERY_BROKER_URL = 'redis://localhost:6379' # Например, Redis, который по умолчанию работает на порту 6379
+CELERY_BROKER_URL = 'redis://localhost:6379'  # Например, Redis, который по умолчанию работает на порту 6379
 
 # URL-адрес брокера результатов, также Redis
 CELERY_RESULT_BACKEND = 'redis://localhost:6379'
