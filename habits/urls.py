@@ -10,6 +10,7 @@ router = routers.DefaultRouter()
 router.register(f'habits', HabitViewSet, basename='habit')
 
 urlpatterns = [
-    path('habits/all/', GetAllHabits.as_view(), name='all-ahbits'),
+    # все привычки всех пользователей
+    path('habits/all/', GetAllHabits.as_view(), name='all-habits'),
 ]
 urlpatterns += router.urls

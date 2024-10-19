@@ -27,9 +27,10 @@ class TimeSpentValidation:
         self.field = field
 
     def __call__(self,value):
-        """Проверяется поле time_spent, если оно более лимита, то вызывается исключение"""
+        """Проверяется поле time_spent, если оно более лимита, то вызывается исключение.
+        Существует доп. проверка на наличие содержимого в поле time_spent в PATCH запросе."""
         limit = datetime.timedelta(minutes=2)
-        if value.get('time_spent') > limit:
+        if value.get('time_spent') and value.get('time_spent') > limit:
             raise serializers.ValidationError(f'Потраченное время не может превышать {limit.seconds} секунд.')
 
 class IsPleasantSignTrueForRelatedHabit:
@@ -50,7 +51,8 @@ class PeriodLimitValidation:
         self.field = field
 
     def __call__(self, value):
-        """Проверяется поле regularity, если оно более допустимого диапазона, то вызывается исключение"""
+        """Проверяется поле regularity, если оно более допустимого диапазона, то вызывается исключение.
+        Существует доп. проверка на наличие содержимого в поле regularity в PATCH запросе."""
         allowed_periods = range(1, 8)  # 1 неделя
-        if int(value.get('regularity')) not in allowed_periods:
+        if value.get('regularity') and int(value.get('regularity')) not in allowed_periods:
             raise serializers.ValidationError(f'Периодичность должна быть не более {allowed_periods[-1]} дней.')
