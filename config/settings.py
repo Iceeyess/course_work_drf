@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'corsheaders',  # Чтобы внешний источник мог получить доступ к backend
     'django_celery_beat',  # обработчик задач
+    'drf_yasg',  # Документация по проекту
 ]
 
 MIDDLEWARE = [
