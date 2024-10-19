@@ -40,6 +40,7 @@ class HabitViewSet(viewsets.ModelViewSet):
         return super().create(request, *args, **kwargs)
 
     def list(self, request, *args, **kwargs):
+        """Выдача списка объектов с пагинацией"""
         queryset = Habit.objects.filter(user=request.user)
         paginated_queryset = self.paginate_queryset(queryset)
         serializer = HabitSerializer(paginated_queryset, many=True)
@@ -49,3 +50,7 @@ class HabitViewSet(viewsets.ModelViewSet):
 class GetAllHabits(generics.ListAPIView):
     queryset = Habit.objects.all()
     serializer_class = HabitSerializer
+
+    def get_queryset(self):
+        """Выдавать только по признаку публичности"""
+        return Habit.objects.filter(is_public=True)
