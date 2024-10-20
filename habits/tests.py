@@ -1,7 +1,4 @@
 import datetime
-from json import JSONDecoder
-from typing import SupportsIndex
-
 import pytz
 from django.shortcuts import get_object_or_404
 from django.test import TestCase
@@ -19,6 +16,7 @@ from config.settings import TIME_ZONE
 from habits.models import Habit
 from users.models import User
 import json
+from config import settings
 
 
 # Create your tests here.
