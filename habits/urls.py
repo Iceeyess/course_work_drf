@@ -7,7 +7,7 @@ from habits.views import HabitViewSet, GetAllHabits
 app_name = HabitsConfig.name
 
 router = routers.DefaultRouter()
-router.register(f'habits', HabitViewSet, basename='habit')
+router.register(r'habits', HabitViewSet, basename='habit')
 
 urlpatterns = [
     # все привычки всех пользователей
