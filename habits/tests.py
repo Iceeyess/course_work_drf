@@ -80,7 +80,7 @@ class HabitTestCase(APITestCase):
             to_be_time = now.replace(hour=0, minute=0, second=0, tzinfo=pytz.timezone(TIME_ZONE)) + response_timedelta_time + datetime.timedelta(days=1)
         else:
             to_be_time = (now.replace(microsecond=0, hour=0, minute=0, second=0, tzinfo=pytz.timezone(TIME_ZONE)) + response_timedelta_time)
-        self.assertEqual(str(to_be_time).split('+')[0],
+        self.assertEqual(str(to_be_time).split('.')[0],
                          response['datetime_to_trigger_task'].split('.')[0].replace('T', ' '))
 
 
@@ -112,25 +112,37 @@ class HabitTestCase(APITestCase):
             'Authorization': f'Token {access_token}',
             'Content-Type': 'application/json'
         }
-        data = self.data
+        #  Разные данные пользователей для 2х привычек
+        data = self.data.copy()
         data['user_id'] = self.user_2.id
         created_habit_1 = Habit.objects.create(**data)
         created_habit_2 = Habit.objects.create(**data)
-
+        #  Запрос HTTP
         habit_url = reverse('habits:habit-list')
         response = client_list.get(path=habit_url, format='json', headers=headers)
-        asdasd = json.loads(response.content)
+        #  Проверяем что привычки присутствуют только у user_2, потому что в headers данные пользователя 2
         for _ in response.data['results']:
             self.assertTrue(_['user'] == self.user_2.id)
         self.assertTrue(isinstance(json.loads(response.content), dict))
 
     def test_delete_habit(self):
         """Тестирование удаления привычки"""
-        create_habit = Habit.objects.create(**self.data)
-        habit_url = reverse_lazy('habits:habit-detail', args=[create_habit.id])
+        created_habit_1 = Habit.objects.create(**self.data)
+        habit_url = reverse_lazy('habits:habit-detail', args=[created_habit_1.id])
         response = self.client.delete(path=habit_url, format='json', headers=self.headers)
-        self.assertTrue(bool(create_habit))
+        self.assertTrue(bool(created_habit_1))
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
 
-    def get_all_habits(self):
+    def test_get_all_habits(self):
         """Тестирование списках всех привычек у пользователей"""
+        data_1 = self.data.copy()
+        data_1.update({'user_id': self.user_2.id})
+        habit_1 = Habit.objects.create(**data_1)
+        habit_2 = Habit.objects.create(**self.data)
+        habit_url = reverse('habits:habit-list')
+        response = self.client.get(path=habit_url, format='json', headers=self.headers)
+        # Проверка, поскольку в экземпляре класса теста стоит по умолчанию авторизация self.user (см. setUp), то и
+        #  привычки будут только self.user
+        for _ in response.data['results']:
+            self.assertEqual(_['user'], self.user.id)
+
