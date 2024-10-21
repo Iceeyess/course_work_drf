@@ -4,7 +4,7 @@ from users.models import User
 
 NULLABLE = dict(null=True, blank=True)
 
-# Create your models here.
+
 class Habit(models.Model):
     """Модель привычки.
     Заметки:

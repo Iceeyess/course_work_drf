@@ -192,7 +192,6 @@ SIMPLE_JWT = {
 # Телеграм ссылка на API
 TG_API_LINK = 'https://api.telegram.org/bot'
 TG_BOT_TOKEN = os.getenv('TG_BOT_TOKEN')
-TG_CHAT_ID = os.getenv('TG_CHAT_ID')  # в .env файле настраивается под свои критерии
 
 # Настройки кеширования
 
@@ -238,6 +237,6 @@ CORS_ALLOW_ALL_ORIGINS = False
 CELERY_BEAT_SCHEDULE = {
     'task-name': {
         'task': 'habits.tasks.check_time_to_trigger_habit',  # Путь к задаче
-        'schedule': timedelta(minutes=1),  # Расписание выполнения задачи (например, каждые 10 минут)
+        'schedule': timedelta(minutes=1),  # Расписание выполнения задачи (например, каждую минуту)
     },
 }

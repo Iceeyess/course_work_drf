@@ -16,6 +16,7 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
 
         return token
 
+
 class UserSerializer(serializers.ModelSerializer):
     """Класс-сериализатор для регистрации пользователя"""
     class Meta:

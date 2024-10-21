@@ -1,7 +1,4 @@
-from django.shortcuts import render
 from rest_framework import viewsets, generics
-from rest_framework.decorators import permission_classes, api_view
-
 from habits.models import Habit
 from habits.serializers import HabitSerializer
 from .pagination import FiveHabitsOnPage
