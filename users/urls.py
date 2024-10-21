@@ -11,6 +11,3 @@ urlpatterns = [
     path('register/', UserRegister.as_view(), name='user-register'),
     path('delete/<int:pk>/', UserDelete.as_view(), name='user-delete'),
 ]
-
-
-

@@ -1,12 +1,9 @@
-from django.test import TestCase
 from django.urls import reverse
 from rest_framework.test import APITestCase, APIClient
 from rest_framework import status
-
 from users.models import User
-from config import settings
 
-# Create your tests here.
+
 class UserTestCase(APITestCase):
     """Класс тестирования модели пользователя"""
     def setUp(self) -> None:
@@ -42,4 +39,3 @@ class UserTestCase(APITestCase):
         #  Проверка на статус 204 и, что юзера под сохраненным user_id не существует
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         self.assertFalse(User.objects.filter(pk=user_id).exists())
-

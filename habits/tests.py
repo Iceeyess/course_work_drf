@@ -1,22 +1,12 @@
 import datetime
 import pytz
-from django.shortcuts import get_object_or_404
-from django.test import TestCase
-
-# Create your tests here.
-from django.test import TestCase
 from rest_framework.test import APITestCase, APIClient
 from rest_framework import status
-from requests.auth import HTTPBasicAuth
-from rest_framework_simplejwt.tokens import Token
 from django.urls import reverse, reverse_lazy
 import json
-
 from config.settings import TIME_ZONE
 from habits.models import Habit
 from users.models import User
-import json
-from config import settings
 
 
 # Create your tests here.
@@ -70,17 +60,18 @@ class HabitTestCase(APITestCase):
                 self.assertEqual(response[element], self.data[element])
         # проверка работы логики datetime_to_trigger_task
         now = datetime.datetime.now()
-        timedelta_now = datetime.timedelta(hours=now.hour, minutes=now.minute,
-                                                   seconds=now.second)
+        timedelta_now = datetime.timedelta(hours=now.hour, minutes=now.minute, seconds=now.second)
         resp_hours, rest_minutes, resp_seconds = [int(_) for _ in response['time'].split(':')]
         response_timedelta_time = datetime.timedelta(hours=resp_hours, minutes=rest_minutes, seconds=resp_seconds)
         if timedelta_now > response_timedelta_time:
-            to_be_time = now.replace(hour=0, minute=0, second=0, tzinfo=pytz.timezone(TIME_ZONE)) + response_timedelta_time + datetime.timedelta(days=1)
+            to_be_time = now.replace(hour=0, minute=0, second=0,
+                                     tzinfo=pytz.timezone(TIME_ZONE)) + response_timedelta_time + datetime.timedelta(
+                days=1)
         else:
-            to_be_time = (now.replace(microsecond=0, hour=0, minute=0, second=0, tzinfo=pytz.timezone(TIME_ZONE)) + response_timedelta_time)
+            to_be_time = (now.replace(microsecond=0, hour=0, minute=0, second=0,
+                                      tzinfo=pytz.timezone(TIME_ZONE)) + response_timedelta_time)
         self.assertEqual(str(to_be_time).split('.')[0],
                          response['datetime_to_trigger_task'].split('.')[0].replace('T', ' '))
-
 
     def test_update_habit(self):
         """Тестирование изменения привычки.
@@ -113,8 +104,8 @@ class HabitTestCase(APITestCase):
         #  Разные данные пользователей для 2х привычек
         data = self.data.copy()
         data['user_id'] = self.user_2.id
-        created_habit_1 = Habit.objects.create(**data)
-        created_habit_2 = Habit.objects.create(**data)
+        Habit.objects.create(**data)
+        Habit.objects.create(**data)
         #  Запрос HTTP
         habit_url = reverse('habits:habit-list')
         response = client_list.get(path=habit_url, format='json', headers=headers)
@@ -135,12 +126,11 @@ class HabitTestCase(APITestCase):
         """Тестирование списках всех привычек у пользователей"""
         data_1 = self.data.copy()
         data_1.update({'user_id': self.user_2.id})
-        habit_1 = Habit.objects.create(**data_1)
-        habit_2 = Habit.objects.create(**self.data)
+        Habit.objects.create(**data_1)
+        Habit.objects.create(**self.data)
         habit_url = reverse('habits:habit-list')
         response = self.client.get(path=habit_url, format='json', headers=self.headers)
         # Проверка, поскольку в экземпляре класса теста стоит по умолчанию авторизация self.user (см. setUp), то и
         #  привычки будут только self.user
         for _ in response.data['results']:
             self.assertEqual(_['user'], self.user.id)
-
