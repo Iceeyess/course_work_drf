@@ -1,0 +1,42 @@
+version: '3.12.3-slim'
+services:
+  db:
+    image: postgres:latest
+    environment:
+      POSTGRES_PASSWORD: qwerty12345
+      PGDATA: /var/lib/postgresql/data/pgdata
+    networks:
+      - backend
+  drf_course_work:
+    image: drf_course_work:latest
+    build: .
+    command: sh -c "python manage.py migrate && python manage.py runserver"
+    volumes:
+      - .:/app
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+    environment:
+      env_file: "webapp.env"
+    networks:
+      - backend
+  redis:
+    image: redis:latest
+    networks:
+      - backend
+  celery:
+    image: celery:latest
+    command: sh -c "celery -A config worker --loglevel=info && celery -A config beat --loglevel=info"
+    volumes:
+      - .:/app
+    depends_on:
+      - redis
+      - drf_course_work
+    networks:
+      - backend
+
+networks:
+  backend:
+    driver: bridge
+

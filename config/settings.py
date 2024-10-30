@@ -20,8 +20,14 @@ from dotenv import load_dotenv
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-dot_env = os.path.join(BASE_DIR, '.env')
-load_dotenv(dotenv_path=dot_env)
+#  variable for docker or local machine.
+is_for_docker = True
+if is_for_docker:
+    dot_env = os.path.join(BASE_DIR, 'webapp.env')
+    load_dotenv(dotenv_path=dot_env)
+else:
+    dot_env = os.path.join(BASE_DIR, '.env')
+    load_dotenv(dotenv_path=dot_env)
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
@@ -208,10 +214,10 @@ if CACHES_ENABLED:
 # Настройки для Celery
 
 # URL-адрес брокера сообщений
-CELERY_BROKER_URL = 'redis://localhost:6379'  # Например, Redis, который по умолчанию работает на порту 6379
+CELERY_BROKER_URL = os.getenv('CELERY_BROKER_URL')  # Например, Redis, который по умолчанию работает на порту 6379
 
 # URL-адрес брокера результатов, также Redis
-CELERY_RESULT_BACKEND = 'redis://localhost:6379'
+CELERY_RESULT_BACKEND = os.getenv('CELERY_RESULT_BACKEND')
 
 # Часовой пояс для работы Celery
 CELERY_TIMEZONE = "Europe/Moscow"
