@@ -1,4 +1,4 @@
-version: '3.12.3-slim'
+version: '3'
 services:
   db:
     image: postgres:latest
@@ -10,7 +10,7 @@ services:
   drf_course_work:
     image: drf_course_work:latest
     build: .
-    command: sh -c "python manage.py migrate && python manage.py runserver"
+    command: sh -c "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
     volumes:
       - .:/app
     ports:
